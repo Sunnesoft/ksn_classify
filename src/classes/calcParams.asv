@@ -24,8 +24,8 @@ for i=0:1:blockCount(1)-1
        N = 0;
        
        %% calculate mean
-       for k = start(1):1:start(1)+blockSize(1)-1
-           for l = start(2):1:start(2)+blockSize(2)-1
+       for k = start(1):1:start(1)+blockSize(1)
+           for l = start(2):1:start(2)+blockSize(2)
                if(alpha(k,l) == 0)
                    continue;
                end

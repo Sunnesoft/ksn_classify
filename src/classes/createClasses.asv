@@ -1,4 +1,4 @@
-% ATTENTION!!! - change root path to ksn_classify
+
 %%
 % sample - rgb image without alpha channel
 % alpha - opacity. It's need for set empty spaces by value -1,
@@ -9,26 +9,11 @@
 addpath(strcat(pathstr,'/./../parzen/'));
 
 blockSize = [8,8];
-
-path = strcat(pathstr,'/./../../samples/winter/forest.png')
-[sample,map,alpha] = imread(path);
-
 classes = cell(3);
 
-summerForestSample = im2double(rgb2gray(sample));
-classes{1} = calcParams(summerForestSample,alpha,blockSize);
-
-path = strcat(pathstr,'/./../../samples/winter/road.png')
-[sample,map,alpha] = imread(path);
-
-summerRoadSample = im2double(rgb2gray(sample));
-classes{2} = calcParams(summerRoadSample,alpha,blockSize);
-
-path = strcat(pathstr,'/./../../samples/winter/field.png')
-[sample,map,alpha] = imread(path);
-
-summerFieldSample = im2double(rgb2gray(sample));
-classes{3} = calcParams(summerFieldSample,alpha,blockSize);
+classes{1} = getClass(strcat(pathstr,'/./../../samples/summer/forest.png'),blockSize);
+classes{2} = getClass(strcat(pathstr,'/./../../samples/summer/road.png'),blockSize);
+classes{3} = getClass(strcat(pathstr,'/./../../samples/summer/field.png'),blockSize);
 
 figure(1);
 x = classes{1};
@@ -42,19 +27,32 @@ plot(x(:,1),x(:,2),'bs');
 hold off;
 
 width = parzenWindowWidth(0.1,1,0.1,classes)
-i = parzenClassify([2,2],0.1,classes)
-
-pd = parzenDensity([0,0.05,1,0,0.05,1],width,classes);
+pd = parzenDensity([-1,0.05,1,-1,0.05,1],width,classes);
 
 figure(2);
-
+colormap('Autumn')
 surf(pd(:,:,1));
 hold on;
 
 mesh(pd(:,:,2));
-colormap('Autumn')
 hold on;
 
 mesh(pd(:,:,3));
-colormap('Winter')
 hold off;
+
+[targetParams,target,sample] = getTarget(strcat(pathstr,'/./../../samples/summer/view.png'),[160,80,16,16]);
+figure(3);
+subplot(2,1,1);
+imshow(sample);
+subplot(2,1,2);
+imshow(target);
+
+i = parzenClassify(targetParams,width,classes)
+
+if i == 1
+    print('
+elseif i == 2
+
+elseif i == 3
+
+end

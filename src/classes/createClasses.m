@@ -9,26 +9,13 @@
 addpath(strcat(pathstr,'/./../parzen/'));
 
 blockSize = [8,8];
-
-path = strcat(pathstr,'/./../../samples/winter/forest.png')
-[sample,map,alpha] = imread(path);
-
 classes = cell(3);
 
-summerForestSample = im2double(rgb2gray(sample));
-classes{1} = calcParams(summerForestSample,alpha,blockSize);
+pathstr = strcat(pathstr,'/./../../samples/winter/');
 
-path = strcat(pathstr,'/./../../samples/winter/road.png')
-[sample,map,alpha] = imread(path);
-
-summerRoadSample = im2double(rgb2gray(sample));
-classes{2} = calcParams(summerRoadSample,alpha,blockSize);
-
-path = strcat(pathstr,'/./../../samples/winter/field.png')
-[sample,map,alpha] = imread(path);
-
-summerFieldSample = im2double(rgb2gray(sample));
-classes{3} = calcParams(summerFieldSample,alpha,blockSize);
+classes{1} = getClass(strcat(pathstr,'forest.png'),blockSize);
+classes{2} = getClass(strcat(pathstr,'road.png'),blockSize);
+classes{3} = getClass(strcat(pathstr,'field.png'),blockSize);
 
 figure(1);
 x = classes{1};
@@ -42,9 +29,7 @@ plot(x(:,1),x(:,2),'bs');
 hold off;
 
 width = parzenWindowWidth(0.1,1,0.1,classes)
-i = parzenClassify([2,2],0.1,classes)
-
-pd = parzenDensity([0,0.05,1,0,0.05,1],width,classes);
+pd = parzenDensity([-1,0.05,1,-1,0.05,1],width,classes);
 
 figure(2);
 colormap('Autumn')
@@ -56,3 +41,30 @@ hold on;
 
 mesh(pd(:,:,3));
 hold off;
+
+figure(3);
+
+[targetParams,target,sample] = getTarget(strcat(pathstr,'view.png'),[40,80,16,16]);
+i = classify(targetParams,width,classes)
+
+subplot(3,2,1);
+imshow(sample);
+subplot(3,2,2);
+imshow(target);
+
+[targetParams,target,sample] = getTarget(strcat(pathstr,'view.png'),[160,80,16,16]);
+i = classify(targetParams,width,classes)
+
+subplot(3,2,3);
+imshow(sample);
+subplot(3,2,4);
+imshow(target);
+
+[targetParams,target,sample] = getTarget(strcat(pathstr,'view.png'),[80,80,16,16]);
+i = classify(targetParams,width,classes)
+
+subplot(3,2,5);
+imshow(sample);
+subplot(3,2,6);
+imshow(target);
+
