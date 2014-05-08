@@ -11,18 +11,17 @@ addpath(strcat(path,'/./../parzen/'));
 blockSize = [8,8];
 classes = cell(3);
 
-pathstr = strcat(path,'/./../../samples/summer/');
-output = strcat(path,'/./../../results/summer/');
+pathstr = strcat(pathstr,'/./../../samples/summer/');
 
 [forest,mapForest,alphaForest] = imread(strcat(pathstr,'forest.png'));
-[road,mapRoad,alphaRoad] = imread(strcat(pathstr,'road.png'));
+[road,mapRoad,alphaRoad] = imread(strcat(pathstr,'road2.png'));
 [field,mapField,alphaField] = imread(strcat(pathstr,'field.png'));
 
 classes{1} = getClass(forest,mapForest,alphaForest,blockSize);
 classes{2} = getClass(road,mapRoad,alphaRoad,blockSize);
 classes{3} = getClass(field,mapField,alphaField,blockSize);
 
-save(strcat(output,'classes_withcars'),'classes');
+save('cellarray','cellarray')
 
 figure(1);
 x = classes{1};
@@ -37,8 +36,6 @@ hold off;
 
 width = parzenWindowWidth(0.1,1,0.1,classes)
 pd = parzenDensity([-1,0.05,1,-1,0.05,1],width,classes);
-
-save(strcat(output,'density_for_3_classes_withcars'),'pd');
 
 figure(2);
 colormap('Autumn')
